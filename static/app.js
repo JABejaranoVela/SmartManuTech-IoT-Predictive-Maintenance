@@ -177,6 +177,7 @@ async function refresh() {
 
 document.querySelector("#simulateBtn").addEventListener("click", async () => {
   await fetchJson("/api/simulate", { method: "POST" });
+  await new Promise((resolve) => setTimeout(resolve, 900));
   await refresh();
 });
 

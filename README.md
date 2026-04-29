@@ -92,7 +92,7 @@ Ese boton genera casos controlados:
 Tambien se puede lanzar por API:
 
 ```powershell
-Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/demo
+Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/reset-demo
 ```
 
 ## Endpoints utiles
@@ -102,8 +102,7 @@ Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/demo
 - `GET /api/machines`: estado agregado por maquina.
 - `GET /api/readings`: ultimas lecturas.
 - `GET /api/alerts`: alertas generadas.
-- `POST /api/simulate`: genera y procesa una lectura sin pasar por Kafka, util para demo rapida.
-- `POST /api/demo`: genera una demo controlada con todos los tipos de alerta.
+- `POST /api/simulate`: genera una lectura y la publica en Kafka para que el consumidor la procese.
 - `POST /api/reset-demo`: limpia lecturas/alertas y genera demo controlada.
 
 ## Alertas implementadas
@@ -165,6 +164,20 @@ Crear demo controlada desde terminal:
 ```powershell
 .\.venv\Scripts\python.exe -m app.demo_seed
 ```
+
+## Nota sobre Kafka en la demo
+
+El boton `Generar lectura` usa el flujo Kafka real: FastAPI genera una lectura sintetica y la publica en Apache Kafka. Despues, el consumidor Python lee el mensaje, calcula el riesgo, genera alertas si corresponde y guarda el resultado en SQLite.
+
+Para que ese flujo se vea en el dashboard deben estar activos Kafka, el consumidor y la API:
+
+```powershell
+docker compose up -d
+.\.venv\Scripts\python.exe -m app.consumer
+.\.venv\Scripts\python.exe -m uvicorn app.api:app --reload
+```
+
+El boton `Simular incidencias` se mantiene como herramienta de demostracion: limpia los datos y crea un escenario controlado con alertas visibles para capturas.
 
 Crear demo limpia para capturas:
 

@@ -87,7 +87,9 @@ La visualizacion esta pensada para que el equipo de mantenimiento interprete rap
 - resumen de alertas por tipo,
 - grafica de riesgo reciente.
 
-Para facilitar las capturas de la entrega, se ha creado una demo controlada que genera una maquina sana y varios casos anomalos. Esta demo garantiza que aparecen los seis tipos de alerta implementados.
+El boton Generar lectura simula un sensor IoT que publica una lectura en Apache Kafka. Posteriormente, el consumidor Python recibe el mensaje, calcula el riesgo, genera alertas si corresponde y almacena el resultado en SQLite. De esta forma, Kafka forma parte del flujo principal del sistema y permite demostrar el procesamiento de datos IoT en tiempo real.
+
+Para facilitar las capturas de la entrega, tambien se ha creado una demo controlada mediante el boton Simular incidencias, que limpia los datos anteriores y genera una maquina sana y varios casos anomalos. Esta demo garantiza que aparecen los seis tipos de alerta implementados.
 
 > Captura recomendada: dashboard tras pulsar `Demo alertas`.
 

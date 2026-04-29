@@ -1,21 +1,17 @@
 from __future__ import annotations
 
-import json
 import time
 
-from confluent_kafka import Producer
-
-from app.config import KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC
+from app.config import KAFKA_TOPIC
+from app.kafka_client import publish_reading
 from app.simulator import generate_reading
 
 
 def main() -> None:
-    producer = Producer({"bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS})
     print(f"Sending IoT readings to Kafka topic '{KAFKA_TOPIC}'...")
     while True:
         reading = generate_reading()
-        producer.produce(KAFKA_TOPIC, json.dumps(reading).encode("utf-8"))
-        producer.flush()
+        publish_reading(reading)
         print(
             f"{reading['timestamp']} {reading['machine_id']} "
             f"risk={reading['risk_score']} status={reading['status']}"

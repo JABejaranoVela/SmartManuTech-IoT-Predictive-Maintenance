@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from fastapi import FastAPI
+from fastapi import HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from confluent_kafka import KafkaException
 
 from app.config import BASE_DIR
-from app.demo_seed import seed_demo_data
-from app.processor import process_reading
+from app.kafka_client import publish_reading
 from app.reset_demo import reset_demo
 from app.simulator import generate_reading
 from app.storage import (
@@ -54,12 +55,18 @@ def machines() -> list[dict]:
 @app.post("/api/simulate")
 def simulate() -> dict:
     reading = generate_reading()
-    return process_reading(reading)
-
-
-@app.post("/api/demo")
-def demo() -> dict:
-    return seed_demo_data()
+    try:
+        publish_reading(reading)
+    except KafkaException as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Kafka no esta disponible. Levanta Kafka con docker compose up -d.",
+        ) from exc
+    return {
+        "status": "queued",
+        "message": "Lectura enviada a Kafka. El consumidor la procesara y guardara en SQLite.",
+        "reading": reading,
+    }
 
 
 @app.post("/api/reset-demo")
