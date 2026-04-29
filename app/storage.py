@@ -4,9 +4,7 @@ import sqlite3
 from contextlib import contextmanager
 from typing import Any, Iterator
 
-import pandas as pd
-
-from app.config import DATA_DIR, DB_PATH, PARQUET_PATH
+from app.config import DATA_DIR, DB_PATH
 
 
 @contextmanager
@@ -152,15 +150,6 @@ def get_machine_status() -> list[dict[str, Any]]:
             """
         ).fetchall()
     return rows_to_dicts(rows)
-
-
-def export_readings_to_parquet() -> str:
-    init_db()
-    with get_connection() as conn:
-        df = pd.read_sql_query("SELECT * FROM readings ORDER BY id", conn)
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(PARQUET_PATH, index=False)
-    return str(PARQUET_PATH)
 
 
 def clear_demo_data() -> None:

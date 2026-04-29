@@ -10,7 +10,6 @@ from app.processor import process_reading
 from app.reset_demo import reset_demo
 from app.simulator import generate_reading
 from app.storage import (
-    export_readings_to_parquet,
     get_machine_status,
     get_recent_alerts,
     get_recent_readings,
@@ -66,8 +65,3 @@ def demo() -> dict:
 @app.post("/api/reset-demo")
 def reset_demo_endpoint() -> dict:
     return reset_demo()
-
-
-@app.post("/api/export/parquet")
-def export_parquet() -> dict[str, str]:
-    return {"path": export_readings_to_parquet()}

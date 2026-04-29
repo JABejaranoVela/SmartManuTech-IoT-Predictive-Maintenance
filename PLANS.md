@@ -12,7 +12,7 @@ La prioridad es cubrir la rubrica del PDF con una app simple, demostrable y faci
 Productor IoT Python
         -> Apache Kafka
         -> Consumidor Python
-        -> SQLite + Parquet
+        -> SQLite
         -> FastAPI
         -> Dashboard web
 ```
@@ -22,7 +22,6 @@ Productor IoT Python
 - RA1 CE d: procesar datos almacenados.
   - Las lecturas se guardan en SQLite.
   - El sistema calcula estado, riesgo y alertas.
-  - El historico se puede exportar a Parquet.
 
 - RA1 CE e: presentar resultados faciles de interpretar.
   - Dashboard con estado de maquinas, riesgo, graficas y tabla de alertas.
@@ -38,7 +37,6 @@ Productor IoT Python
 
 - RA2 CE a: justificar almacenamiento Big Data.
   - SQLite se usa como almacenamiento operativo local.
-  - Parquet se usa como formato analitico.
   - En memoria se justifica que en produccion se podria escalar a S3, HDFS, Cassandra o Elasticsearch.
 
 ## Decisiones Tecnicas
@@ -50,6 +48,7 @@ Productor IoT Python
   - "El prototipo implementa procesamiento de streams sobre Apache Kafka mediante consumidores Python. En un entorno empresarial Java, esta capa podria implementarse con Kafka Streams."
 - No implementar Hadoop real para evitar complejidad innecesaria.
 - No implementar Cassandra ni Elasticsearch salvo que se decida ampliar el alcance.
+- Usar SQLite como almacenamiento local del prototipo y justificar en la memoria como escalaria a S3, HDFS, Cassandra o Elasticsearch.
 
 ## Base De Datos Actual
 
@@ -57,12 +56,6 @@ Archivo SQLite:
 
 ```text
 data/smartmanutech.db
-```
-
-Archivo Parquet:
-
-```text
-data/readings.parquet
 ```
 
 Tablas:
@@ -100,7 +93,7 @@ Campos principales de `alerts`:
 - Captura de Swagger en `/docs`.
 - Captura del dashboard en `/`.
 - Captura de la tabla de alertas con 5 o mas tipos.
-- Captura o explicacion de SQLite y Parquet como almacenamiento.
+- Captura o explicacion de SQLite como almacenamiento del prototipo.
 
 ## Siguientes Mejoras Posibles
 

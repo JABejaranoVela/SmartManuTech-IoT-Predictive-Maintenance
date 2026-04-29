@@ -36,14 +36,14 @@ La arquitectura implementada sigue un pipeline Big Data simplificado:
 Productor IoT Python
         -> Apache Kafka
         -> Consumidor Python
-        -> SQLite + Parquet
+        -> SQLite
         -> FastAPI
         -> Dashboard web
 ```
 
 El productor Python simula sensores IoT y envia lecturas a Apache Kafka. Kafka actua como sistema de mensajeria para procesar flujos de datos en tiempo real. Un consumidor Python lee los mensajes, calcula el riesgo de fallo, genera alertas y almacena la informacion.
 
-SQLite se utiliza como base de datos operativa del prototipo, mientras que Parquet se utiliza como formato analitico para historico. En un entorno industrial, esta capa podria escalarse a HDFS, AWS S3, Cassandra o Elasticsearch, segun las necesidades de volumen, consulta y disponibilidad.
+SQLite se utiliza como base de datos operativa del prototipo. En un entorno industrial, esta capa podria escalarse a HDFS, AWS S3, Cassandra o Elasticsearch, segun las necesidades de volumen, consulta y disponibilidad.
 
 > Captura recomendada: dashboard mostrando la banda de arquitectura.
 
@@ -56,7 +56,7 @@ Componentes principales:
 - `app/producer.py`: genera lecturas IoT y las publica en Kafka.
 - `app/consumer.py`: consume lecturas desde Kafka y las procesa.
 - `app/analytics.py`: calcula el riesgo y detecta anomalias.
-- `app/storage.py`: gestiona SQLite y exportacion Parquet.
+- `app/storage.py`: gestiona SQLite.
 - `app/api.py`: expone datos mediante API REST y sirve el dashboard.
 - `static/`: contiene el dashboard web.
 
@@ -102,13 +102,13 @@ El sistema cumple los criterios de evaluacion de la siguiente forma:
 | RA1 CE d: procesar datos almacenados | Las lecturas se almacenan en SQLite, se procesan y generan estado, riesgo y alertas. |
 | RA1 CE e: presentar resultados faciles de interpretar | El dashboard muestra semaforos, graficas, alertas y recomendaciones claras. |
 | RA4 c: generar 5 o mas alertas | Se generan seis tipos de alerta distintos. |
-| RA2 CE a: justificar almacenamiento para grandes volumenes | Se usa SQLite y Parquet en el prototipo, justificando escalado a HDFS, S3, Cassandra o Elasticsearch. |
+| RA2 CE a: justificar almacenamiento para grandes volumenes | Se usa SQLite en el prototipo, justificando escalado a HDFS, S3, Cassandra o Elasticsearch. |
 
-La solucion demuestra el procesamiento de datos almacenados porque cada lectura queda registrada y posteriormente se consulta para mostrar historico, estado de maquinas y alertas. Tambien permite exportar los datos a Parquet, formato habitual en entornos analiticos y data lakes.
+La solucion demuestra el procesamiento de datos almacenados porque cada lectura queda registrada y posteriormente se consulta para mostrar historico, estado de maquinas y alertas. La memoria justifica que, en un entorno productivo con mayor volumen, el almacenamiento podria migrarse a sistemas distribuidos o servicios de data lake.
 
 ## 7. Problemas encontrados y limitaciones
 
-Durante el desarrollo se tomaron varias decisiones para evitar sobreingenieria. No se implemento Hadoop real porque su configuracion local anadiria complejidad sin aportar una mejora proporcional para el prototipo. En su lugar, se uso Parquet como formato analitico y se explico como podria escalarse a HDFS o S3.
+Durante el desarrollo se tomaron varias decisiones para evitar sobreingenieria. No se implemento Hadoop real porque su configuracion local anadiria complejidad sin aportar una mejora proporcional para el prototipo. En su lugar, se uso SQLite como almacenamiento local y se explico como podria escalarse a HDFS, S3, Cassandra o Elasticsearch.
 
 Tampoco se utilizo Kafka Streams real, ya que esta tecnologia esta orientada principalmente a Java/Scala. En este prototipo se implemento procesamiento de streams sobre Kafka mediante consumidores Python, una alternativa mas adecuada al alcance del trabajo.
 
@@ -118,7 +118,7 @@ La principal limitacion es que los datos son sinteticos. Sin embargo, esto es ra
 
 El prototipo desarrollado permite procesar datos IoT en tiempo real, almacenar historico, detectar anomalias, generar alertas y visualizar resultados de forma clara. La arquitectura es sencilla, pero representa los componentes principales de una solucion Big Data aplicada a mantenimiento predictivo industrial.
 
-La solucion cubre los criterios de evaluacion sin introducir complejidad innecesaria. Kafka aporta el componente de streaming real, SQLite y Parquet permiten demostrar almacenamiento y analisis historico, y FastAPI junto con el dashboard facilitan la presentacion de resultados al cliente final.
+La solucion cubre los criterios de evaluacion sin introducir complejidad innecesaria. Kafka aporta el componente de streaming real, SQLite permite demostrar almacenamiento historico en el prototipo, y FastAPI junto con el dashboard facilitan la presentacion de resultados al cliente final.
 
 ## 9. Bibliografia
 
@@ -127,7 +127,5 @@ Apache Kafka. (s. f.). *Apache Kafka documentation*. https://kafka.apache.org/do
 Confluent. (s. f.). *Confluent Kafka Python client*. https://docs.confluent.io/kafka-clients/python/current/overview.html
 
 FastAPI. (s. f.). *FastAPI documentation*. https://fastapi.tiangolo.com/
-
-The Apache Software Foundation. (s. f.). *Apache Parquet documentation*. https://parquet.apache.org/docs/
 
 Python Software Foundation. (s. f.). *sqlite3: DB-API 2.0 interface for SQLite databases*. https://docs.python.org/3/library/sqlite3.html

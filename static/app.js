@@ -56,7 +56,6 @@ function renderAlertSummary() {
       <div class="alert-type">
         <span>${label}</span>
         <strong>${counts[code] || 0}</strong>
-        <span>${code}</span>
       </div>
     `,
     )
@@ -127,6 +126,10 @@ function drawRiskChart() {
     ctx.moveTo(padding, y);
     ctx.lineTo(width - padding, y);
     ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = level === 70 ? "#c53030" : "#b7791f";
+    ctx.font = "12px Arial";
+    ctx.fillText(level === 70 ? "Critico 70" : "Aviso 40", width - padding - 72, y - 6);
   });
   ctx.setLineDash([]);
 
@@ -152,6 +155,7 @@ function drawRiskChart() {
   ctx.font = "13px Arial";
   ctx.fillText("0", 10, height - padding + 4);
   ctx.fillText("100", 6, padding + 4);
+  ctx.fillText("Riesgo de fallo", padding, 18);
 }
 
 async function refresh() {
@@ -177,13 +181,8 @@ document.querySelector("#simulateBtn").addEventListener("click", async () => {
 });
 
 document.querySelector("#demoBtn").addEventListener("click", async () => {
-  await fetchJson("/api/demo", { method: "POST" });
+  await fetchJson("/api/reset-demo", { method: "POST" });
   await refresh();
-});
-
-document.querySelector("#exportBtn").addEventListener("click", async () => {
-  const result = await fetchJson("/api/export/parquet", { method: "POST" });
-  alert(`Histórico exportado en ${result.path}`);
 });
 
 refresh();

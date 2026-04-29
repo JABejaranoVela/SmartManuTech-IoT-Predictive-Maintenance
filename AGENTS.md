@@ -22,7 +22,6 @@
 - Consumidor stream: Python con `confluent-kafka`.
 - Procesamiento: reglas Python de anomalias y score de riesgo.
 - Almacenamiento operativo: SQLite.
-- Almacenamiento analitico: Parquet.
 - Dashboard: HTML, CSS y JavaScript servido por FastAPI.
 
 ## Comandos Habituales

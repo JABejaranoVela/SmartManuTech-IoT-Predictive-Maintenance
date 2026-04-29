@@ -1,17 +1,12 @@
 from __future__ import annotations
 
 from app.demo_seed import seed_demo_data
-from app.storage import clear_demo_data, export_readings_to_parquet
+from app.storage import clear_demo_data
 
 
 def reset_demo() -> dict[str, object]:
     clear_demo_data()
-    result = seed_demo_data()
-    parquet_path = export_readings_to_parquet()
-    return {
-        **result,
-        "parquet_path": parquet_path,
-    }
+    return seed_demo_data()
 
 
 if __name__ == "__main__":

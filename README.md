@@ -8,7 +8,7 @@ Prototipo Big Data aplicado para procesar datos IoT industriales en tiempo real 
 Productor IoT Python
         -> Apache Kafka
         -> Consumidor Python
-        -> SQLite + Parquet
+        -> SQLite
         -> FastAPI
         -> Dashboard web
 ```
@@ -104,8 +104,7 @@ Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/demo
 - `GET /api/alerts`: alertas generadas.
 - `POST /api/simulate`: genera y procesa una lectura sin pasar por Kafka, util para demo rapida.
 - `POST /api/demo`: genera una demo controlada con todos los tipos de alerta.
-- `POST /api/reset-demo`: limpia lecturas/alertas, genera demo controlada y exporta Parquet.
-- `POST /api/export/parquet`: exporta historico a `data/readings.parquet`.
+- `POST /api/reset-demo`: limpia lecturas/alertas y genera demo controlada.
 
 ## Alertas implementadas
 
@@ -123,7 +122,7 @@ Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/demo
 | RA1 CE d: procesar datos almacenados | Las lecturas se guardan en SQLite, se procesan y generan estado, riesgo y alertas. |
 | RA1 CE e: resultados faciles de interpretar | El dashboard muestra semaforos, riesgo, graficas, alertas y recomendaciones. |
 | RA4 c: 5 o mas alertas | La demo controlada genera 6 tipos de alerta distintos. |
-| RA2 CE a: importancia del almacenamiento | Se usa SQLite para almacenamiento operativo y Parquet para historico analitico; se justifica escalado a S3, HDFS, Cassandra o Elasticsearch. |
+| RA2 CE a: importancia del almacenamiento | Se usa SQLite como almacenamiento operativo del prototipo; se justifica escalado a S3, HDFS, Cassandra o Elasticsearch. |
 
 ## Capturas recomendadas para el PDF
 
@@ -133,7 +132,6 @@ Invoke-RestMethod -Method Post http://127.0.0.1:8000/api/demo
 - Swagger en `http://127.0.0.1:8000/docs`.
 - Dashboard despues de pulsar `Demo alertas`.
 - Tabla de alertas mostrando los 6 codigos.
-- Exportacion Parquet con `POST /api/export/parquet`.
 
 ## Base de datos
 
@@ -148,15 +146,9 @@ Tablas:
 - `readings`: lecturas IoT procesadas.
 - `alerts`: alertas generadas.
 
-Parquet:
-
-```text
-data/readings.parquet
-```
-
 ## Nota para la memoria
 
-El prototipo usa consumidores Python para procesar streams sobre Kafka. En un entorno empresarial Java/Scala, esta capa podria implementarse con Kafka Streams. SQLite se usa como almacenamiento operativo local y Parquet como formato analitico; en produccion el historico podria migrarse a S3, HDFS, Cassandra o Elasticsearch.
+El prototipo usa consumidores Python para procesar streams sobre Kafka. En un entorno empresarial Java/Scala, esta capa podria implementarse con Kafka Streams. SQLite se usa como almacenamiento operativo local; en produccion el historico podria migrarse a S3, HDFS, Cassandra o Elasticsearch.
 
 Los datos del prototipo son sinteticos. Se generan localmente porque el enunciado no proporciona un dataset real de SmartManuTech. Las variables simuladas reproducen las indicadas en el PDF: temperatura, vibracion, velocidad de produccion, consumo energetico y eventos de error.
 
