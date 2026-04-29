@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartManuTech IoT</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>SmartManuTech IoT</h1>
+        <p>Mantenimiento predictivo de maquinaria industrial</p>
+      </div>
+      <div class="actions">
+        <button id="simulateBtn">Generar lectura</button>
+        <button id="demoBtn">Demo alertas</button>
+        <button id="exportBtn">Exportar Parquet</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="pipeline" aria-label="Arquitectura del prototipo">
+        <div>
+          <strong>Productor IoT</strong>
+          <span>Python</span>
+        </div>
+        <div>
+          <strong>Streaming</strong>
+          <span>Apache Kafka</span>
+        </div>
+        <div>
+          <strong>Procesamiento</strong>
+          <span>Consumidor Python</span>
+        </div>
+        <div>
+          <strong>Almacenamiento</strong>
+          <span>SQLite + Parquet</span>
+        </div>
+        <div>
+          <strong>Visualizacion</strong>
+          <span>FastAPI Dashboard</span>
+        </div>
+      </section>
+
+      <section class="kpis" id="kpis"></section>
+
+      <section class="grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Estado de máquinas</h2>
+            <span id="updatedAt">Actualizando...</span>
+          </div>
+          <div class="machine-grid" id="machines"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Riesgo reciente</h2>
+            <span>Últimas lecturas</span>
+          </div>
+          <canvas id="riskChart" width="700" height="260"></canvas>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Alertas por tipo</h2>
+          <span>Resumen para evaluar riesgos</span>
+        </div>
+        <div class="alert-summary" id="alertSummary"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Alertas y recomendaciones</h2>
+          <span>Interpretación para mantenimiento</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Máquina</th>
+                <th>Alerta</th>
+                <th>Severidad</th>
+                <th>Recomendación</th>
+              </tr>
+            </thead>
+            <tbody id="alerts"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
